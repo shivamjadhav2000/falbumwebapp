@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route,Routes } from 'react-router-dom';
 function App() {
   return (
     <Router >
-      <Layout className="text-white font-medium m-20">
+      <Layout className="text-white font-medium">
       <Routes>
           <Route exact path="/" element={<MainPage/>}/>
           <Route exact path="/login" element={<Login/>}/>

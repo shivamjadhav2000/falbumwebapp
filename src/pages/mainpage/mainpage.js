@@ -135,9 +135,10 @@ export default function MainPage(){
     batch.forEach((file) => {
       formData.append('files', file);
     });
-    await axios.post('http://localhost:3000/upload', formData, {
+    await axios.post('http://localhost:3000/api/common/albums/upload', formData, {
       headers: {
         'Content-Type': `multipart/form-data boundary=${formData._boundary}`,
+        Authorization:'Bearer '+ user.accessToken
       }
       })
       .then((response) => {
