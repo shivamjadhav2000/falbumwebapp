@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from 'react';
 import axios from "axios";
 // images list component
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import IconButton from '@mui/material/IconButton';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import CheckIcon from '@mui/icons-material/Check';
 import SaveIcon from '@mui/icons-material/Save';
 import Alert from '@mui/material/Alert';
-
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import Box from '@mui/material/Box';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
@@ -22,16 +24,21 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { green } from '@mui/material/colors';
 
+// forms
+import Switch from '@mui/material/Switch';
+
 
 export default function AlbumsView({currentAlbum,user}){
     //file upload variables
     const [files, setFiles] = useState([]);
+    const [selectedfiles,setSelectedfiles]=useState([]);
     const [totalSize,setTotalSize]=useState(1)
     const [uploadStatus, setUploadStatus] = useState({});
     const [upldData,setUpldData]=useState(0)
     const [tempData,setTempData]=useState([])
     const [progressBar,setProgressBar]=useState(0)
     const [loading, setLoading] = useState(false);
+    const [selectAll,setSelectAll]=useState(false);
     const [error, setError] = useState(null);
     const [openAlbumsUpload, setAlbumsUpload] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -48,12 +55,29 @@ export default function AlbumsView({currentAlbum,user}){
     const handleAlbumsUploadClose=()=>{
         setAlbumsUpload(false)
       }
+    const handleSelectAll=(event)=>{
+      setSelectAll(event.target.checked);
+    }
+    useEffect(()=>{
+      let newArray=selectAll?Array(files.length).fill(true):Array(files.length).fill(false)
+        setSelectedfiles(newArray)
+    },[selectAll])
+    const handleAlbumSelect=(index)=>{
+      const newArray = [...selectedfiles]; // create a new array copy
+    newArray[index] = !newArray[index];
+    // update the item at the given index
+     setSelectedfiles(newArray);
+     console.log(index,newArray[index])
+    }
     const handleFileChange=(event)=>{
-        console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
         const selectedFiles = Array.from(event.target.files);
         setFiles(selectedFiles);
-        console.log("selectedFiles====",selectedFiles)
+        console.log("selectedFiles==",selectedFiles)
+        let booleanarray =Array(selectedFiles.length).fill(false)
+        console.log(booleanarray)
+        // setSelectedfiles(Array(selectedFiles.length).fill(false))
         setAlbumsUpload(true)
+        setSelectAll(false)
         setTotalSize(1)
         setUploadStatus({})
         setUpldData(0)
@@ -248,16 +272,42 @@ export default function AlbumsView({currentAlbum,user}){
                 >
           <DialogTitle id="scroll-dialog-title">Albums Upload</DialogTitle>
           <DialogContent>
-            {files.length && 
+          <div >
+              <Switch
+            onChange={handleSelectAll}
+            name="loading"
+            color="primary"
+          />Select all</div>
+            {files.length &&
                 <ImageList sx={{ height: 600}} cols={6} rowHeight={150}>
-                        {files.map((item) => (
+                        {files.map((item,idx) => (
                             <ImageListItem key={item.name} className="border border-gray-300">
-                            <img
-                                src={URL.createObjectURL(item)}
-                                alt={item.name}
-                                loading="lazy"
-                            />
+                                  <img
+                                  src={URL.createObjectURL(item)}
+                                  alt={item.name}
+                                  loading="lazy"
+                                />
+                                <ImageListItemBar
+                                  sx={{
+                                    background:
+                                      'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, ' +
+                                      'rgba(0,0,0,0.1) 70%, rgba(0,0,0,0) 100%)',
+                                  }}
+                                  title={item.title}
+                                  position="top"
+                                  actionIcon={
+                                    <IconButton
+                                      sx={{ color: selectedfiles[idx]?'blue':'gray'  }}
+                                      // aria-label={`star ${item.title}`}
+                                      onClick={() => handleAlbumSelect(idx)}
+                                    >
+                                      <StarBorderIcon />
+                                    </IconButton>
+                                  }
+                                  actionPosition="right"
+                                />
                             </ImageListItem>
+                            
                         ))}
                         </ImageList>
             }
