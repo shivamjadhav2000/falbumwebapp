@@ -1,9 +1,10 @@
 import Nav from './Nav'
 export default function Layout({children}){
     return (
-    <div className='mx-14'>
+    <div className=' m-2 flex flex-col gap-4'>
         <Nav></Nav>
-        <div className='w-full' style={{height:'85%'}}>{children}</div>
+
+        <div className=' mx-14' style={{height:'85%'}}>{children}</div>
     </div>
     )
 }

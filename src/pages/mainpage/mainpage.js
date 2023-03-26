@@ -75,6 +75,28 @@ export default function MainPage(){
         console.log("res=================",res)
       })
     }
+    const fetchAlbumByName=async (token,albumName)=>{
+      await axios.get(`http://localhost:3000/api/common/albums/albumlist/${albumName}`,{
+        headers:{
+          Authorization:'Bearer '+ token
+        }
+      })
+      .then(res=>{
+        let newAlbums=albums.map(album=>{
+          if (album._id===res.data._id){
+            return res.data
+          }
+          else{
+            return album
+          }
+        })
+        setAlbums(newAlbums)
+        setCurrentAlbum(res.data)
+      })
+      .catch(res=>{
+        console.log("res=================",res)
+      })
+    }
 
     const Demo = styled('div')(({ theme }) => ({
         backgroundColor: theme.palette.background.paper,
@@ -106,7 +128,7 @@ export default function MainPage(){
                     <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
                         Albums List
                     </Typography>
-                    {albums.length>0 && albums.map(album=>{
+                    {albums.length>0 && albums.map((album)=>{
                         return (
                         <List 
                             key={album._id}
@@ -141,7 +163,7 @@ export default function MainPage(){
                         </div>
                     </div>
                     <div className='w-9/12'>
-                    <AlbumsView currentAlbum={currentAlbum} user={user} />
+                    <AlbumsView currentAlbum={currentAlbum} user={user} fetchAlbumByName={fetchAlbumByName}/>
                     </div>
            </div>
         <Dialog open={open} onClose={handleClose}>

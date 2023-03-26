@@ -27,8 +27,10 @@ import { green } from '@mui/material/colors';
 // forms
 import Switch from '@mui/material/Switch';
 
+// custom component
+import MediaView from "./mediaView";
 
-export default function AlbumsView({currentAlbum,user}){
+export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
     //file upload variables
     const [files, setFiles] = useState([]);
     const [selectedfiles,setSelectedfiles]=useState([]);
@@ -42,7 +44,8 @@ export default function AlbumsView({currentAlbum,user}){
     const [error, setError] = useState(null);
     const [openAlbumsUpload, setAlbumsUpload] = useState(false);
     const [success, setSuccess] = useState(false);
-
+    const [mediaView,setmediaView]=useState(false);
+    const [currentMedia,setCurrentMedia]=useState(0)
 
     const buttonSx = {
         ...(success && {
@@ -67,14 +70,11 @@ export default function AlbumsView({currentAlbum,user}){
     newArray[index] = !newArray[index];
     // update the item at the given index
      setSelectedfiles(newArray);
-     console.log(index,newArray[index])
     }
     const handleFileChange=(event)=>{
         const selectedFiles = Array.from(event.target.files);
         setFiles(selectedFiles);
-        console.log("selectedFiles==",selectedFiles)
         let booleanarray =Array(selectedFiles.length).fill(false)
-        console.log(booleanarray)
         // setSelectedfiles(Array(selectedFiles.length).fill(false))
         setAlbumsUpload(true)
         setSelectAll(false)
@@ -95,7 +95,13 @@ export default function AlbumsView({currentAlbum,user}){
         setLoading(true);
         setSuccess(false);
         setError(null);
-      
+        let updatedFilesList=[]
+        if (!selectAll){
+          updatedFilesList=files.filter((file,idx)=>{
+            if (selectedfiles[idx]) return file
+          })
+          setFiles(updatedFilesList)
+        }
         const batchCount = 10; // change batch size here
         const batches = Array.from(
           { length: Math.ceil(files.length / batchCount) },
@@ -118,6 +124,7 @@ export default function AlbumsView({currentAlbum,user}){
           const intervalId = await setInterval(async () => {
             const batch = batches[batchIndex];
             let status =await HandleUpload(batch, batchIndex, batchCount)
+            fetchAlbumByName(user.accessToken,currentAlbum.albumName)
               batchIndex++;
               if (batchIndex >= batches.length) {
               clearInterval(intervalId);
@@ -150,7 +157,6 @@ export default function AlbumsView({currentAlbum,user}){
           }
           })
           .then((response) => {
-            console.log(response)
           if (response.statusText==='OK') {
             status=true
             for(let index=0;index<batch.length;index++){
@@ -201,13 +207,14 @@ export default function AlbumsView({currentAlbum,user}){
                     </nav>
                     <main className='p-4'>
                     <ImageList sx={{ height: 600}} cols={6} rowHeight={150}>
-                    {currentAlbum.images.map((item) => (
-                        <ImageListItem key={item} className="border border-gray-300">
+                    {currentAlbum.images.map((item,idx) => (
+                        <ImageListItem key={item} className="border border-gray-300" onClick={()=>{setmediaView(true);setCurrentMedia(idx)}}>
                         <img
                             src={`http://localhost:3000/uploads/${item}?w=164&h=164&fit=crop&auto=format`}
                             srcSet={`${item}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                             alt={item}
                             loading="lazy"
+                            className="cursor-pointer hover:shadow-2xl"
                         />
                         </ImageListItem>
                     ))}
@@ -317,6 +324,7 @@ export default function AlbumsView({currentAlbum,user}){
             <Button onClick={handleSubmit}>Upload</Button>
           </DialogActions>
         </Dialog> 
+        {mediaView==true && <MediaView currentAlbum={currentAlbum} currentMedia={currentMedia} setCurrentMedia={setCurrentMedia} setmediaView={setmediaView}/>}
         </div>
     )
 }

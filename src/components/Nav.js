@@ -5,11 +5,11 @@ export default function Nav(){
     const [user,loading]=useAuthState(auth);
     return (
         <nav>
-            <ul className="flex justify-between items-center py-10 px-2 ">
-                <Link to={'/'}><li>FalBum</li></Link>
+            <ul className="flex justify-between items-center p-2 rounded bg-blue-500 ">
+                <Link to={'/'}><li className='uppercase font-sans text-2xl text-white'>FalBum</li></Link>
                 {!user && (
                  <Link to={'/login'}>
-                    <li className="py-2 px-4 text-lg bg-teal-500 text-white rounded-lg font-medium">
+                    <li className="py-2 px-4 text-lg bg-teal-500 text-white rounded-lg font-medium font-bold">
                         JOIN NOW
                     </li>
                 </Link>
@@ -17,7 +17,7 @@ export default function Nav(){
                 {user && (
                     <div>
                         <Link to={"/dashboard"}>
-                            <img src={user.photoURL} alt="user" />
+                            <img src={user.photoURL} className='rounded-full' alt="user" />
                         </Link>
                     </div>
                 )}
