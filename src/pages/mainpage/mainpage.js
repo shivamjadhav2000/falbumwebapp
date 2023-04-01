@@ -10,7 +10,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { green } from '@mui/material/colors';
 
 // import Card from '@mui/material/Card';
 // import CardActions from '@mui/material/CardActions';
@@ -63,7 +62,8 @@ export default function MainPage(){
     },[user])
 
     const fetchData=async (token)=>{
-      await axios.get('http://localhost:3000/api/common/albums/albumlist',{
+      console.log("token==",token,"process.env.REACT_APP_API_URL=",process.env.REACT_APP_API_URL,"common/albums/albumlist")
+      await axios.get(process.env.REACT_APP_API_URL+'common/albums/albumlist',{
         headers:{
           Authorization:'Bearer '+ token
         }
@@ -76,7 +76,7 @@ export default function MainPage(){
       })
     }
     const fetchAlbumByName=async (token,albumName)=>{
-      await axios.get(`http://localhost:3000/api/common/albums/albumlist/${albumName}`,{
+      await axios.get(process.env.REACT_APP_API_URL+`/common/albums/albumlist/${albumName}`,{
         headers:{
           Authorization:'Bearer '+ token
         }
@@ -107,7 +107,7 @@ export default function MainPage(){
   };
   
   const handleCreate=async ()=>{
-      await axios.post('http://localhost:3000/api/common/albums/create-album',
+      await axios.post(process.env.REACT_APP_API_URL+'/common/albums/create-album',
       { albumName: albumName,discription: albumdiscp},
         { 
             headers:{

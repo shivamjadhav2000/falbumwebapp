@@ -150,7 +150,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
           formData.append('files', file);
         });
         formData.append('albumName',currentAlbum.albumName)
-        await axios.post('http://localhost:3000/api/common/albums/upload', formData, {
+        await axios.post(process.env.REACT_APP_API_URL+'/common/albums/upload', formData, {
           headers: {
             'Content-Type': `multipart/form-data boundary=${formData._boundary}`,
             Authorization:'Bearer '+ user.accessToken
