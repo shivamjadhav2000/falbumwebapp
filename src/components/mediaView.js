@@ -24,7 +24,7 @@ export default function MediaView({currentAlbum,currentMedia,setCurrentMedia,set
                             <div className='absolute w-full h-full flex justify-center items-center'>
                             <ChevronLeftIcon sx={{ fontSize: 60,cursor:'pointer' }} onClick={()=>{handleimgRotation('-')}} />
                             <img
-                                src={`http://localhost:3000/uploads/${currentAlbum.images[currentMedia]}`}
+                                src={currentAlbum.images[currentMedia]}
                                 alt={currentAlbum.images[currentMedia]}
                                 className='cursor-pointer hover:shadow-2xl' 
                                 style={{
