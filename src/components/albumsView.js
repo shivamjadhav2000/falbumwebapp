@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useState } from 'react';
-import axios from "axios";
 // images list component
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -29,6 +28,7 @@ import Switch from '@mui/material/Switch';
 
 // custom component
 import MediaView from "./mediaView";
+import axios from "axios";
 
 export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
     //file upload variables
