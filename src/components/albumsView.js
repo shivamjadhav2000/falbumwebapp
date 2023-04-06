@@ -18,7 +18,6 @@ import Fab from '@mui/material/Fab';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { green } from '@mui/material/colors';
@@ -38,7 +37,6 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
     const [uploadStatus, setUploadStatus] = useState({});
     const [upldData,setUpldData]=useState(0)
     const [tempData,setTempData]=useState([])
-    const [progressBar,setProgressBar]=useState(0)
     const [loading, setLoading] = useState(false);
     const [selectAll,setSelectAll]=useState(false);
     const [error, setError] = useState(null);
@@ -74,7 +72,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
     const handleFileChange=(event)=>{
         const selectedFiles = Array.from(event.target.files);
         setFiles(selectedFiles);
-        let booleanarray =Array(selectedFiles.length).fill(false)
+        // let booleanarray =Array(selectedFiles.length).fill(false)
         // setSelectedfiles(Array(selectedFiles.length).fill(false))
         setAlbumsUpload(true)
         setSelectAll(false)
@@ -82,7 +80,6 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
         setUploadStatus({})
         setUpldData(0)
         setTempData([])
-        setProgressBar(0)
         setLoading(false)
         setSuccess(false)
         setError(null)
@@ -99,6 +96,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
         if (!selectAll){
           updatedFilesList=files.filter((file,idx)=>{
             if (selectedfiles[idx]) return file
+            return null
           })
           setFiles(updatedFilesList)
         }
@@ -150,14 +148,14 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
           formData.append('files', file);
         });
         formData.append('albumName',currentAlbum.albumName)
-        await axios.post(process.env.REACT_APP_API_URL+'/common/albums/upload', formData, {
+        await axios.post(process.env.REACT_APP_API_URL+'common/albums/uploads', formData, {
           headers: {
             'Content-Type': `multipart/form-data boundary=${formData._boundary}`,
             Authorization:'Bearer '+ user.accessToken
           }
           })
-          .then((response) => {
-          if (response.statusText==='OK') {
+          .then((res) => {
+          if (res.statusText==='OK') {
             status=true
             for(let index=0;index<batch.length;index++){
               setUploadStatus((prevStatus) => ({
@@ -171,15 +169,12 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
             setUpldData((prev)=>{return Number(prev)+Number(CurrentBatchSize)})
             let g=Number(tempData.slice(-1))+CurrentBatchSize
             setTempData(prev=>{return [...prev,Number(g)]})
-            let prog=(upldData/totalSize)*100
-            setProgressBar(prog)
           } else {
             throw new Error('Failed to upload file');
           }
         })
         .catch((error) => {
         status=false
-          console.log(error);
           for(let index=0;index<batch.length;index++){
             setUploadStatus((prevStatus) => ({
               ...prevStatus,
@@ -210,7 +205,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
                     {currentAlbum.images.map((item,idx) => (
                         <ImageListItem key={item} className="border border-gray-300" onClick={()=>{setmediaView(true);setCurrentMedia(idx)}}>
                         <img
-                            src={`http://localhost:3000/uploads/${item}?w=164&h=164&fit=crop&auto=format`}
+                            src={item}
                             srcSet={`${item}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                             alt={item}
                             loading="lazy"
@@ -324,7 +319,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
             <Button onClick={handleSubmit}>Upload</Button>
           </DialogActions>
         </Dialog> 
-        {mediaView==true && <MediaView currentAlbum={currentAlbum} currentMedia={currentMedia} setCurrentMedia={setCurrentMedia} setmediaView={setmediaView}/>}
+        {mediaView===true && <MediaView currentAlbum={currentAlbum} currentMedia={currentMedia} setCurrentMedia={setCurrentMedia} setmediaView={setmediaView}/>}
         </div>
     )
 }
