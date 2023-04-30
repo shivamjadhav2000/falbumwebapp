@@ -44,6 +44,8 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
     const [success, setSuccess] = useState(false);
     const [mediaView,setmediaView]=useState(false);
     const [currentMedia,setCurrentMedia]=useState(0)
+    const [medialist,setMedialist]=useState([])
+
 
     const buttonSx = {
         ...(success && {
@@ -53,11 +55,26 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
           },
         }),
       };
+
+    useEffect(()=>{
+      if (currentAlbum){
+        fetchMedia()
+      }
+    },[currentAlbum])  
     const handleAlbumsUploadClose=()=>{
         setAlbumsUpload(false)
       }
     const handleSelectAll=(event)=>{
       setSelectAll(event.target.checked);
+    }
+    const fetchMedia=()=>{
+      axios.get(process.env.REACT_APP_API_URL+`/common/albums/medialist/${currentAlbum._id}`,{
+        headers: {
+          Authorization:'Bearer '+ user.accessToken
+        }
+        }).then(res=>{
+          setMedialist(res.data.data)
+        })
     }
     useEffect(()=>{
       let newArray=selectAll?Array(files.length).fill(true):Array(files.length).fill(false)
@@ -193,21 +210,21 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
                         <ul className="flex justify-between items-center py-2 px-2 ">
                             <li>
                                 <ul>
-                                    <li>{currentAlbum.name}</li>
+                                    <li>{currentAlbum.albumName}</li>
                                     <li>{currentAlbum.discription}</li>
                                 </ul>
                             </li>
-                            <li>8 march 2023</li>
+                            <li>{currentAlbum.createdAt}</li>
                         </ul>
                     </nav>
                     <main className='p-4'>
                     <ImageList sx={{ height: 600}} cols={6} rowHeight={150}>
-                    {currentAlbum.images.map((item,idx) => (
-                        <ImageListItem key={item} className="border border-gray-300" onClick={()=>{setmediaView(true);setCurrentMedia(idx)}}>
+                    {medialist.map((item,idx) => (
+                        <ImageListItem key={item._id} className="border border-gray-300" onClick={()=>{setmediaView(true);setCurrentMedia(idx)}}>
                         <img
-                            src={item}
-                            srcSet={`${item}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                            alt={item}
+                            src={item.url}
+                            style={{ width: "200px", height: "200px" }}
+                            alt={item.url}
                             loading="lazy"
                             className="cursor-pointer hover:shadow-2xl"
                         />
@@ -319,7 +336,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
             <Button onClick={handleSubmit}>Upload</Button>
           </DialogActions>
         </Dialog> 
-        {mediaView===true && <MediaView currentAlbum={currentAlbum} currentMedia={currentMedia} setCurrentMedia={setCurrentMedia} setmediaView={setmediaView}/>}
+        {mediaView===true && <MediaView mediaList={medialist} currentMedia={currentMedia} setCurrentMedia={setCurrentMedia} setmediaView={setmediaView}/>}
         </div>
     )
 }

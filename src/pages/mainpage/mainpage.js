@@ -60,7 +60,7 @@ export default function MainPage(){
     },[user])
 
     const fetchData=async (token)=>{
-      await axios.get(process.env.REACT_APP_API_URL+'common/albums/albumlist',{
+      await axios.get(process.env.REACT_APP_API_URL+'/common/albums/albumlist',{
         headers:{
           Authorization:'Bearer '+ token
         }
@@ -73,13 +73,12 @@ export default function MainPage(){
       })
     }
     const fetchAlbumByName=async (token,albumName)=>{
-      await axios.get(process.env.REACT_APP_API_URL+`common/albums/albumlist/${albumName}`,{
+      await axios.get(process.env.REACT_APP_API_URL+`/common/albums/albumlist/${albumName}`,{
         headers:{
           Authorization:'Bearer '+ token
         }
       })
       .then(res=>{
-        console.log("resres====",res)
         let newAlbums=albums.map(album=>{
           if (album._id===res.data.data._id){
             return res.data.data
@@ -105,7 +104,7 @@ export default function MainPage(){
   };
   
   const handleCreate=async ()=>{
-      await axios.post(process.env.REACT_APP_API_URL+'common/albums/create-album',
+      await axios.post(process.env.REACT_APP_API_URL+'/common/albums/create-album',
       { albumName: albumName,discription: albumdiscp},
         { 
             headers:{
