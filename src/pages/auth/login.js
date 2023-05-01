@@ -5,6 +5,7 @@ import {auth} from "../../utils/firebase"
 import {useNavigate} from 'react-router-dom'
 import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import Qrcodelogin from './qrcodelogin';
 export default function Login(){
     const [user,loading]=useAuthState(auth)
     const navigate =useNavigate()
@@ -43,6 +44,7 @@ export default function Login(){
                 </button>
 
             </div>
+            <Qrcodelogin />
         </div>
     )
 }
