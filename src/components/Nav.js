@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import {useAuthState} from 'react-firebase-hooks/auth';
-import {auth} from '../utils/firebase'
+// import {useAuthState} from 'react-firebase-hooks/auth';
+// import {auth} from '../utils/firebase'
 export default function Nav(){
-    const [user,loading]=useAuthState(auth);
+    const user=JSON.parse(localStorage.getItem('user'))
     return (
         <nav>
             <ul className="flex justify-between items-center p-2 rounded bg-blue-500 ">
@@ -15,9 +15,9 @@ export default function Nav(){
                 </Link>
                 )}
                 {user && (
-                    <div>
+                    <div >
                         <Link to={"/dashboard"}>
-                            <img src={user.photoURL} className='rounded-full' alt="user" />
+                            <img src={user.profileImage} className='rounded-full' style={{width:'60px'}}   alt="user" />
                         </Link>
                     </div>
                 )}

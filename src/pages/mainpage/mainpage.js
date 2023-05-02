@@ -40,7 +40,7 @@ import AlbumsView from '../../components/albumsView';
 export default function MainPage(){
     const [user,userLoading]=useAuthState(auth)
     const navigate =useNavigate()
-
+    const [MyUser,setMyuser]=useState(null)
     const [albumName,setAlbumName]=useState()
     const [albumdiscp,setAlbumDisp]=useState()
 
@@ -51,11 +51,18 @@ export default function MainPage(){
     
 
     useEffect (()=>{
-        if (!user){
+      let User=localStorage.getItem('user')
+        if (!user && !User){
             navigate('/login')
+        }
+        if(User){
+          User=JSON.parse(User)
+          fetchData(User.token)
+          setMyuser(User)
         }
         else{
           fetchData(user.accessToken)
+          setMyuser(user)
         }
     },[user])
 
@@ -108,13 +115,13 @@ export default function MainPage(){
       { albumName: albumName,discription: albumdiscp},
         { 
             headers:{
-                'Authorization' :'Bearer '+ user.accessToken
+                'Authorization' :'Bearer '+ MyUser.token
             }
         }
         )
         .then(res=>{
           setOpen(false)
-          fetchData(user.accessToken)
+          fetchData(MyUser.accessToken)
         })    
   }
     return (
@@ -160,7 +167,7 @@ export default function MainPage(){
                         </div>
                     </div>
                     <div className='w-9/12'>
-                    <AlbumsView currentAlbum={currentAlbum} user={user} fetchAlbumByName={fetchAlbumByName}/>
+                    <AlbumsView currentAlbum={currentAlbum} user={MyUser} fetchAlbumByName={fetchAlbumByName}/>
                     </div>
            </div>
         <Dialog open={open} onClose={handleClose}>

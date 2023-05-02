@@ -68,11 +68,13 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
       setSelectAll(event.target.checked);
     }
     const fetchMedia=()=>{
+      console.log(process.env.REACT_APP_API_URL+`/common/albums/medialist/${currentAlbum._id}`)
       axios.get(process.env.REACT_APP_API_URL+`/common/albums/medialist/${currentAlbum._id}`,{
         headers: {
-          Authorization:'Bearer '+ user.accessToken
+          Authorization:'Bearer '+ user.token
         }
         }).then(res=>{
+          console.log("uer====",res)
           setMedialist(res.data.data)
         })
     }
@@ -168,7 +170,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
         await axios.post(process.env.REACT_APP_API_URL+'common/albums/uploads', formData, {
           headers: {
             'Content-Type': `multipart/form-data boundary=${formData._boundary}`,
-            Authorization:'Bearer '+ user.accessToken
+            Authorization:'Bearer '+ user.token
           }
           })
           .then((res) => {
