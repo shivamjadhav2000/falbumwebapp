@@ -32,15 +32,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useState } from 'react';
 //google user auth
-import {auth} from "../../utils/firebase"
 import {useNavigate} from 'react-router-dom'
 import { useEffect } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import AlbumsView from '../../components/albumsView';
 export default function MainPage(){
-    const [user,userLoading]=useAuthState(auth)
+    const [user,setuser]=useState(null)
     const navigate =useNavigate()
-    const [MyUser,setMyuser]=useState(null)
     const [albumName,setAlbumName]=useState()
     const [albumdiscp,setAlbumDisp]=useState()
 
@@ -51,20 +48,16 @@ export default function MainPage(){
     
 
     useEffect (()=>{
-      let User=localStorage.getItem('user')
-        if (!user && !User){
+      let User=localStorage.getItem('user') || null
+        if ( !User){
             navigate('/login')
         }
         if(User){
           User=JSON.parse(User)
           fetchData(User.token)
-          setMyuser(User)
+          setuser(User)
         }
-        else{
-          fetchData(user.accessToken)
-          setMyuser(user)
-        }
-    },[user])
+    },[])
 
     const fetchData=async (token)=>{
       await axios.get(process.env.REACT_APP_API_URL+'/common/albums/albumlist',{
@@ -115,13 +108,13 @@ export default function MainPage(){
       { albumName: albumName,discription: albumdiscp},
         { 
             headers:{
-                'Authorization' :'Bearer '+ MyUser.token
+                'Authorization' :'Bearer '+ user.token
             }
         }
         )
         .then(res=>{
           setOpen(false)
-          fetchData(MyUser.accessToken)
+          fetchData(user.accessToken)
         })    
   }
     return (
@@ -167,7 +160,7 @@ export default function MainPage(){
                         </div>
                     </div>
                     <div className='w-9/12'>
-                    <AlbumsView currentAlbum={currentAlbum} user={MyUser} fetchAlbumByName={fetchAlbumByName}/>
+                    <AlbumsView currentAlbum={currentAlbum} user={user} fetchAlbumByName={fetchAlbumByName}/>
                     </div>
            </div>
         <Dialog open={open} onClose={handleClose}>

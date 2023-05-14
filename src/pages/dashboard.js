@@ -10,7 +10,7 @@ if (user){
     return (
         <div>
             <h1 className="py-4 text-lg font-medium">Welcome to your dashboard {user.firstName}</h1>
-            <button className="py-2 px-2 text-sm bg-red-500 text-white rounded-lg font-medium" onClick={()=>{localStorage.removeItem('user')}}>Signout</button>
+            <button className="py-2 px-2 text-sm bg-red-500 text-white rounded-lg font-medium" onClick={()=>{localStorage.removeItem('user');navigate('/')}}>Signout</button>
         </div>
     )
 }

@@ -6,8 +6,9 @@ import {useNavigate} from 'react-router-dom'
 function Qrcodelogin() {
     const [qrcode,setqrcode]=useState(null)
   const [sessionId, setSessionId] = useState(null);
-  const navigate =useNavigate()
   const [user,setUser]=useState(localStorage.getItem('user'))
+  const navigate =useNavigate()   
+
   useEffect (()=>{
     if (user){
         navigate('/')
