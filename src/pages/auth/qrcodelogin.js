@@ -56,13 +56,20 @@ function Qrcodelogin() {
   
   // Render the QR code and a message indicating the authentication status
   return (
-    <div>
-      {!user&& <img src={qrcode} alt="QR code" />}
+    <div className="flex flex-row   justify-around items-center">
+      <div >
       {user ? (
         <p>You are authenticated! {user.firstName}</p>
       ) : (
-        <p>Waiting for authentication...</p>
+        <>
+        <p className="text-2xl font-medium">Scan the code to singn into your account</p>
+        <p className="text-base ">Scan the code to singn into your account</p>
+        <p className="text-base ">Scan the code to singn into your account</p>
+        <p className="text-base ">Scan the code to singn into your account</p>
+        </>
       )}
+      </div>
+      {!user&& <img src={qrcode} width={200} alt="QR code" />}
     </div>
   );
 }

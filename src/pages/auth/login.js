@@ -32,18 +32,6 @@ export default function Login(){
     return (
         <div className='shadow-xl mt-32 p-10 text-grey-700 rounded'>
             <h2 className='text-3xl font-medium'>Join Today</h2>
-            <div className='py-4'>
-                <h3 className='py-4'>Sign in with one of the Providers</h3>
-            </div>
-            <div className='flex flex-col gap-4'>
-                <button className='text-white bg-gray-600 p-4 font-medium rounded-lg flex align-middle gap-2' onClick={GoogleLogin}>
-                    <FcGoogle className='text-2xl'/>Sign in with Google
-                </button>
-                <button className='text-white bg-gray-600 p-4 font-medium rounded-lg flex align-middle gap-2'>
-                    <AiFillFacebook className='text-2xl text-blue-400'/>Sign in with Facebook
-                </button>
-
-            </div>
             <Qrcodelogin />
         </div>
     )

@@ -68,14 +68,13 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
       setSelectAll(event.target.checked);
     }
     const fetchMedia=()=>{
-      console.log(process.env.REACT_APP_API_URL+`/common/albums/medialist/${currentAlbum._id}`)
-      axios.get(process.env.REACT_APP_API_URL+`/common/albums/medialist/${currentAlbum._id}`,{
+      axios.get(process.env.REACT_APP_API_URL+`/common/albums/medialist/${currentAlbum._id}?page=1&limit=30`,{
         headers: {
           Authorization:'Bearer '+ user.token
         }
         }).then(res=>{
           console.log("uer====",res)
-          setMedialist(res.data.data)
+          setMedialist(res.data.data || [])
         })
     }
     useEffect(()=>{
@@ -205,9 +204,9 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
     };
       
     return (
-        <div className="h-full">
+        <div className="h-full ">
             {currentAlbum? 
-                <div className='flex flex-col h-full justify-between'>
+                <div className='flex flex-col h-full  justify-between'>
                     <nav className=' py-2 px-4 bg-gray-400'>
                         <ul className="flex justify-between items-center py-2 px-2 ">
                             <li>
@@ -219,24 +218,24 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
                             <li>{currentAlbum.createdAt}</li>
                         </ul>
                     </nav>
-                    <main className='p-4'>
-                    <ImageList sx={{ height: 600}} cols={6} rowHeight={150}>
+                    <div className='p-4 overflow-hidden bg-white'>
+                    { medialist.length==0?<p className="tex-2xl  text-center">No media to show</p>:
+                    <ImageList sx={{ height: '100%'}} cols={6} rowHeight={150}>
                     {medialist.map((item,idx) => (
-                        <ImageListItem key={item._id} className="border border-gray-300" onClick={()=>{setmediaView(true);setCurrentMedia(idx)}}>
+                        <ImageListItem key={item._id}  onClick={()=>{setmediaView(true);setCurrentMedia(idx)}}>
                         <img
-                            src={item.url}
+                            src={item.thumnailUrl}
                             style={{ width: "200px", height: "200px" }}
-                            alt={item.url}
+                            alt={item.thumnailUrl}
                             loading="lazy"
                             className="cursor-pointer hover:shadow-2xl"
                         />
                         </ImageListItem>
                     ))}
                     </ImageList>
-                    </main>
-                    <div className='w-full bg-gray-300 text-right flex justify-between align-middle  gap-2 p-4'>
-                            
-                            
+                    }
+                    </div>
+                    <div className='w-full bg-gray-300 text-right flex justify-between align-middle  gap-2 p-4'>                            
                             {files.length>=1 && 
                                 <div className='flex w-4/5 gap-2'>
                                     <Alert  severity={loading?"warning":'info'} className='w-4/5'>{loading?'Uploading in progress '+parseInt((upldData/totalSize)*100)+'%':'Ready To Upload '+files.length +' files'} </Alert>
@@ -264,18 +263,18 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
                                 </div>
                             }
                             <div className='w-full right'>
-                            <input
-                            accept="image/*"
-                            className="input"
-                            style={{ display: 'none' }}
-                            id="raised-button-file"
-                            multiple
-                            type="file"
-                            onChange={handleFileChange}
-                            />
-                            <label htmlFor="raised-button-file">
-                            <PermMediaIcon />
-                            </label>
+                                <input
+                                accept="image/*"
+                                className="input"
+                                style={{ display: 'none' }}
+                                id="raised-button-file"
+                                multiple
+                                type="file"
+                                onChange={handleFileChange}
+                                />
+                                <label htmlFor="raised-button-file">
+                                <PermMediaIcon />
+                                </label>
                             </div> 
                     </div>     
                     </div>
