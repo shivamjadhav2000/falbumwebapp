@@ -1,6 +1,6 @@
 #!/bin/bash
 # Set the GCP VM IP address and username
-VM_IP_ADDRESS="34.131.11.83"
+VM_IP_ADDRESS="34.131.252.200"
 VM_USERNAME="shivamjadhav348"
 
 echo "starting deploying the build folder"
