@@ -5,13 +5,19 @@ import Dashboard from './pages/dashboard';
 import Notification from './pages/notifications';
 import { BrowserRouter as Router, Route,Routes } from 'react-router-dom';
 import { useState } from 'react';
-
+import {getFCMTOKEN} from './utils/firebase'
+// import './utils/firebase'; // Adjust the path
+// import './firebase-messaging-sw'
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
-    const handleAuthentication = (authenticatedUser) => {
-        setUser(authenticatedUser);
-    };
+  const handleAuthentication =async  (authenticatedUser) => {
+      setUser(authenticatedUser);
+      // const userId = authenticatedUser.id;
+      const FCMtoken=await getFCMTOKEN()
+      console.log("FCMhgjkhghhg",FCMtoken)
+     
+  };
 
     const handleLogout = () => {
         // Perform logout logic

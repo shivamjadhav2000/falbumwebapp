@@ -46,7 +46,6 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
     const [currentMedia,setCurrentMedia]=useState(0)
     const [medialist,setMedialist]=useState([])
 
-
     const buttonSx = {
         ...(success && {
           bgcolor: green[500],
@@ -177,7 +176,7 @@ export default function AlbumsView({currentAlbum,user,fetchAlbumByName}){
             status=true
             for(let index=0;index<batch.length;index++){
               setUploadStatus((prevStatus) => ({
-                ...prevStatus,
+                ...prevStatus,        
                 [batchIndex*batchCount+index]: 'success',
               }));
             }

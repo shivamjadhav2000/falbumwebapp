@@ -25,7 +25,6 @@ function Qrcodelogin({ onAuthentication }) {
                 setSessionId(res.data.token);
             });
     }, []);
-
     // Function to periodically check for authentication status
     async function checkAuthStatus() {
         const res = await axios.get(process.env.REACT_APP_API_URL + '/auth/checkstatus', {
