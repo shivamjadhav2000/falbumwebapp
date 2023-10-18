@@ -9,7 +9,7 @@ git branch
 
 echo "building app ..."
 
-# npm run build
+npm run build`
 
 echo "deploying to server $VM_IP_ADDRESS"
  
